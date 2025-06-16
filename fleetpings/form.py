@@ -87,6 +87,14 @@ class FleetPingForm(forms.Form):
         widget=forms.Select(choices={}),
         help_text=_("Select a channel to ping automatically."),
     )
+    send_dm = forms.BooleanField(
+        initial=Setting.objects.get_setting(Setting.Field.SEND_DIRECT_MESSAGES),
+        required=False,
+        label=_("Send as DM"),
+        help_text=_(
+            "Send a Discord direct message to all members of the pinged group instead of posting to a channel."
+        ),
+    )
     fleet_type = forms.CharField(
         required=False, label=_("Fleet type"), widget=forms.Select(choices={})
     )

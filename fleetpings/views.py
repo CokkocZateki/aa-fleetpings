@@ -23,19 +23,26 @@ from allianceauth.services.hooks import get_extension_logger
 # Alliance Auth (External Libs)
 from app_utils.logging import LoggerAddTag
 from app_utils.urls import reverse_absolute, site_absolute_url
+from django.contrib.auth.models import Group
+
+try:  # pragma: no cover - optional module
+    from allianceauth.services.modules.discord.models import DiscordUser
+except Exception:  # pragma: no cover - optional import
+    DiscordUser = None
 
 # AA Fleet Pings
 from fleetpings import __title__
 from fleetpings.app_settings import (
     can_add_srp_links,
     fittings_installed,
+    discord_service_installed,
     optimer_installed,
     srp_module_installed,
     srp_module_is,
     use_fittings_module_for_doctrines,
 )
 from fleetpings.form import FleetPingForm
-from fleetpings.helper.discord_webhook import ping_discord_webhook
+from fleetpings.helper.discord_webhook import ping_discord_webhook, ping_discord_dm
 from fleetpings.helper.ping_context import get_ping_context_from_form_data
 from fleetpings.models import (
     DiscordPingTarget,
@@ -76,6 +83,7 @@ def index(request: WSGIRequest) -> HttpResponse:
         "site_url": site_absolute_url(),
         "optimer_installed": optimer_installed(),
         "fittings_installed": fittings_installed(),
+        "discord_service_installed": discord_service_installed(),
         "main_character": request.user.profile.main_character,
         "srp_module_available_to_user": srp_module_available_to_user,
         "form": FleetPingForm,
@@ -437,6 +445,20 @@ def ajax_create_fleet_ping(request: WSGIRequest) -> HttpResponse:
             # If we have a Discord webhook, ping it
             if ping_context["ping_channel"]["webhook"]:
                 ping_discord_webhook(ping_context=ping_context, user=request.user)
+
+            if ping_context.get("send_dm"):
+                recipients = []
+                if ping_context["ping_target"]["group_id"]:
+                    try:
+                        group = Group.objects.get(pk=ping_context["ping_target"]["group_id"])
+                    except Group.DoesNotExist:  # pragma: no cover - should not happen
+                        group = None
+                    if group:
+                        recipients = (
+                            DiscordUser.objects.filter(user__groups=group).distinct()
+                        )
+                if recipients:
+                    ping_discord_dm(ping_context=ping_context, recipients=recipients)
 
             logger.info(f"Fleet ping created by user {request.user}")
 

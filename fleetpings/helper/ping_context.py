@@ -100,6 +100,7 @@ def get_ping_context_from_form_data(form_data: dict) -> dict:
             "create_srp_link": bool(form_data["srp_link"]),
         },
         "create_optimer": bool(form_data["optimer"]),
+        "send_dm": bool(form_data.get("send_dm", False)),
         "additional_information": str(form_data["additional_information"]),
         "timezones_installed": timezones_installed(),
         "optimer_installed": optimer_installed(),

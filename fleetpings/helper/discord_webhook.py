@@ -5,6 +5,12 @@ Handling Discord webhooks
 # Third Party
 from dhooks_lite import Embed, Footer, Webhook
 
+# Alliance Auth
+try:  # pragma: no cover - depends on optional module
+    from allianceauth.services.modules.discord.models import DiscordUser
+except Exception:  # pragma: no cover - optional import
+    DiscordUser = None
+
 # Django
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -46,3 +52,19 @@ def ping_discord_webhook(ping_context: dict, user: User):
     discord_webhook.execute(
         webhook_ping_context["header"], embeds=[embed], wait_for_response=True
     )
+
+
+def ping_discord_dm(ping_context: dict, recipients):
+    """Send the ping text as a Discord direct message."""
+
+    if DiscordUser is None:
+        return
+
+    message_context = _get_webhook_ping_context(ping_context=ping_context)
+    message_to_send = f"{message_context['header']}\n{message_context['content']}"
+
+    for duser in recipients:
+        try:  # pragma: no cover - network calls
+            duser.send_message(message_to_send)
+        except Exception:  # pragma: no cover - best effort
+            pass

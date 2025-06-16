@@ -529,6 +529,7 @@ class Setting(SingletonModel):
         )
         WEBHOOK_VERIFICATION = "webhook_verification", _("Verify webhooks")
         DEFAULT_EMBED_COLOR = "default_embed_color", _("Default embed color")
+        SEND_DIRECT_MESSAGES = "send_direct_messages", _("Send direct messages")
 
     use_default_fleet_types = models.BooleanField(
         default=True,
@@ -580,6 +581,15 @@ class Setting(SingletonModel):
         blank=True,
         help_text=_("Default highlight color for the webhook embed."),
         verbose_name=Field.DEFAULT_EMBED_COLOR.label,  # pylint: disable=no-member
+    )
+
+    send_direct_messages = models.BooleanField(
+        default=False,
+        db_index=True,
+        help_text=_(
+            "Send fleet pings as Discord direct messages instead of posting to a webhook."
+        ),
+        verbose_name=Field.SEND_DIRECT_MESSAGES.label,  # pylint: disable=no-member
     )
 
     objects = SettingManager()

@@ -12,6 +12,9 @@
         {% if webhooks_configured %}
             {{ form.ping_channel|bootstrap_horizontal }}
         {% endif %}
+        {% if discord_service_installed %}
+            {{ form.send_dm|bootstrap_horizontal }}
+        {% endif %}
 
         <!-- fleet_type -->
         {{ form.fleet_type|bootstrap_horizontal }}
