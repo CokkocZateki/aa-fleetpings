@@ -38,6 +38,7 @@ ______________________________________________________________________
   - [Use Doctrines From Fittings Module](#use-doctrines-from-fittings-module)
   - [Webhook Verification](#webhook-verification)
   - [Default Embed Color](#default-embed-color)
+  - [Direct Messages](#direct-messages)
 - [Changelog](#changelog)
 - [Translation Status](#translation-status)
 - [Contributing](#contributing)
@@ -178,6 +179,12 @@ The default highlight for the embed, that is used when no other highlight color 
 defined.
 
 **Default:** #FAA61A
+
+### Direct Messages<a name="direct-messages"></a>
+
+Enable sending pings as a Discord direct message to the user who submitted the ping.
+
+**Default:** False
 
 ## Changelog<a name="changelog"></a>
 

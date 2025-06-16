@@ -89,6 +89,12 @@ class FleetPingForm(forms.Form):
         widget=forms.Select(choices={}),
         help_text=_("Select a channel to ping automatically."),
     )
+    direct_message = forms.BooleanField(
+        initial=False,
+        required=False,
+        label=_("Direct message"),
+        help_text=_("Send this ping as a direct message to you."),
+    )
     fleet_type = forms.CharField(
         required=False, label=_("Fleet type"), widget=forms.Select(choices={})
     )

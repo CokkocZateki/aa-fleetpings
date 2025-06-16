@@ -102,6 +102,7 @@ def get_ping_context_from_form_data(form_data: dict) -> dict:
         },
         "create_optimer": bool(form_data["optimer"]),
         "additional_information": str(form_data["additional_information"]),
+        "send_dm": bool(form_data.get("direct_message")),
         "timezones_installed": timezones_installed(),
         "optimer_installed": optimer_installed(),
         "fittings_installed": fittings_installed(),

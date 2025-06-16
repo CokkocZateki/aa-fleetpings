@@ -420,6 +420,14 @@ msgstr ""
 msgid "Default highlight color for the webhook embed."
 msgstr ""
 
+#: fleetpings/form.py:94
+msgid "Direct message"
+msgstr ""
+
+#: fleetpings/form.py:95
+msgid "Send this ping as a direct message to you."
+msgstr ""
+
 #: fleetpings/models.py:627
 msgid "Setting"
 msgstr ""
