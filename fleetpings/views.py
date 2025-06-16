@@ -35,6 +35,7 @@ from fleetpings.app_settings import (
     use_fittings_module_for_doctrines,
 )
 from fleetpings.form import FleetPingForm
+from fleetpings.helper.discord_dm import ping_discord_dm
 from fleetpings.helper.discord_webhook import ping_discord_webhook
 from fleetpings.helper.ping_context import get_ping_context_from_form_data
 from fleetpings.models import (
@@ -485,6 +486,10 @@ def ajax_create_fleet_ping(request: WSGIRequest) -> HttpResponse:
             # If we have a Discord webhook, ping it
             if ping_context["ping_channel"]["webhook"]:
                 ping_discord_webhook(ping_context=ping_context, user=request.user)
+
+            # Send as direct message if requested
+            if ping_context.get("send_dm"):
+                ping_discord_dm(ping_context=ping_context, user=request.user)
 
             logger.info(msg=f"Fleet ping created by user {request.user}")
 
